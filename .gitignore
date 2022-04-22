@@ -125,3 +125,9 @@ venv.bak/
 dmypy.json
 
 .snakemake/
+
+#big files
+pangolearn-classifier/src/score.rs 
+pangolearn-classifier/target
+temp/
+*.fasta.xz

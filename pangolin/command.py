@@ -58,7 +58,8 @@ def main(sysargs = sys.argv[1:]):
     io_group.add_argument('--alignment', action="store_true",help="Output multiple sequence alignment.")
     io_group.add_argument('--alignment-file', action="store",help="Multiple sequence alignment file name.")
     io_group.add_argument('--expanded-lineage', action="store_true", default=False, help="Optional expanded lineage from alias.json in report.")
-
+    io_group.add_argument('--compress-temp', action="store_true",help="Compress temporary files and multiple sequence alignment with GZIP")
+ 
 
     a_group = parser.add_argument_group('Analysis options')
     a_group.add_argument('--analysis-mode', action="store",help="""Pangolin includes multiple analysis engines: UShER and pangoLEARN.

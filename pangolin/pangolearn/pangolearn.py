@@ -172,7 +172,8 @@ def assign_lineage(header_file,model_file,reference_file,sequences_file,outfile)
 			# create a data from from the seqList
 			d = np.array(rows, np.uint8)
 			df = pd.DataFrame(d, columns=columns)
-
+			print(df)
+			df.to_csv("../encoded_sequences.csv")
 			predictions = loaded_model.predict_proba(df)
 
 			for index in range(len(predictions)):
