@@ -1,3 +1,3 @@
-pub fn score(input: Vec<f64>) -> Vec<f64> {
+pub fn score(input: Vec<f32>) -> Vec<f32> {
     return input.clone()
 }

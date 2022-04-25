@@ -26,14 +26,16 @@ fn main() {
 
     let outfile = File::create("src/test_data/output_probabilites.csv").unwrap();
     let header_length = rdr.headers().unwrap().len();
-    let records: Vec<Vec<f64>> = rdr.records().into_iter().map(|result|{
+    let records: Vec<Vec<f32>> = rdr.records().map(|result|{
         let record = result.unwrap();
-        let parsed: Vec<f64> = record.into_iter().map(|x| x.parse().expect(x)).collect();
+        let record_slice = record.as_slice();
+        let parsed: Vec<f32> = record_slice[1..].chars()
+            .into_iter().map(|x| x.to_digit(10).expect(&x.to_string()) as f32).collect();
         return parsed
     }).collect();
     let now = Instant::now();
     for i in 1..100{
-        let outputs: Vec<Vec<f64>> = records.iter().map(|x| score(x.to_vec())).collect();
+        let outputs: Vec<Vec<f32>> = records.iter().map(|x| score(x.to_vec())).collect();
         println!("{:?}",outputs[1][1]);
     }
     // }
