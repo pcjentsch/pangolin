@@ -14,7 +14,7 @@ from Bio import SeqIO
 import sys
 import os
 import timeit
-
+from memory_profiler import memory_usage
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -173,9 +173,9 @@ def assign_lineage(header_file,model_file,reference_file,sequences_file,outfile)
 			# create a data from from the seqList
 			d = np.array(rows, np.uint8)
 			df = pd.DataFrame(d, columns=columns)
-			print(df)
 			df.to_csv("../encoded_sequences.csv")
-			print(timeit.timeit("loaded_model.predict_proba(df)", setup = "import gc; gc.enable()", globals=locals(),number=1000)/1000)
+			# print("timing: " + str(timeit.timeit("loaded_model.predict_proba(df)", setup = "import gc; gc.enable()", globals=locals(),number=1000)/1000) + " seconds")
+			print(memory_usage((loaded_model.predict_proba, (df,))))
 			predictions = loaded_model.predict_proba(df)
 
 			for index in range(len(predictions)):
