@@ -13,6 +13,7 @@ import joblib
 from Bio import SeqIO
 import sys
 import os
+import timeit
 
 import warnings
 
@@ -174,6 +175,7 @@ def assign_lineage(header_file,model_file,reference_file,sequences_file,outfile)
 			df = pd.DataFrame(d, columns=columns)
 			print(df)
 			df.to_csv("../encoded_sequences.csv")
+			print(timeit.timeit("loaded_model.predict_proba(df)", setup = "import gc; gc.enable()", globals=locals(),number=1000)/1000)
 			predictions = loaded_model.predict_proba(df)
 
 			for index in range(len(predictions)):
