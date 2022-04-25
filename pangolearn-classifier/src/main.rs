@@ -1,30 +1,52 @@
 mod score;
+mod keep_indices;
 use crate::score::score;
-use csv::*;
+use csv;
 use std::fs::File;
 use std::process;
 use std::time::{Duration,Instant};
+use seq_io::fasta::{self, Record};
+use core::fmt::Error;
+
+fn alignment_to_one_hot(fname: String) -> Result<Vec<u8>,Error>{
+    let mut fasta_reader = fasta::Reader::from_path(fname).expect("alignment file cannot be opened!");
+    while let Some(record) = fasta_reader.next(){
+        let record = record.expect("error in reading record from alignment");
+        let seq = record.full_seq();
+    }
+    return Ok(vec![0_u8,0_u8]);
+}
+
 
 fn main() {
-    let mut infile = File::open("../../pangolin/temp/encoded_sequences.csv").unwrap();
+
+    // alignment_to_one_hot("src/test_data/big_test_alignment.fasta".to_string()).unwrap();
+    let mut infile = File::open("src/test_data/encoded_sequences.csv").unwrap();
     let mut rdr = csv::Reader::from_reader(infile);
 
-    let outfile = File::create("output_probabilites.csv").unwrap();
-
-    // let mut wrtr= csv::Writer::from_writer(outfile);
-
-    let now = Instant::now();
+    let outfile = File::create("src/test_data/output_probabilites.csv").unwrap();
     let header_length = rdr.headers().unwrap().len();
-    for result in rdr.records(){
+    let records: Vec<Vec<f64>> = rdr.records().into_iter().map(|result|{
         let record = result.unwrap();
-        let record_vec: Vec<f64> = record.into_iter().map(|x| x.parse().expect(x)).collect();
-        let outputs = score(record_vec);
-        println!("{:?}",outputs[1]);
-        // wrtr.write_record(output);
+        let parsed: Vec<f64> = record.into_iter().map(|x| x.parse().expect(x)).collect();
+        return parsed
+    }).collect();
+    let now = Instant::now();
+    for i in 1..100{
+        let outputs: Vec<Vec<f64>> = records.iter().map(|x| score(x.to_vec())).collect();
+        println!("{:?}",outputs[1][1]);
     }
-    // wrtr.flush().unwrap();
+    // }
     let timing =now.elapsed();
-    println!("took {} ms or {} microseconds",timing.as_millis(), timing.as_micros());
-
+    println!("took {} ms or {} microseconds",timing.as_millis()/100, timing.as_micros()/100);
 }
 //took 479 ms or 479062 microseconds
+// #[cfg(test)]
+// mod tests{
+//     use super::*;
+//     #[test]
+//     fn test_one_hot(){
+
+//     }
+        
+// }
